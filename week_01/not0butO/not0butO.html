@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <title>not 0 but O</title>
     <style>
+
         #table {
             margin:0 auto;
             border-collapse: collapse;
@@ -26,6 +28,18 @@
 </head>
 <body>
     <div id="app">
+        <form>
+            <p>
+            <label for="beginner">初級</label>
+            <input type="radio" id="beginner" value="1" v-model.number="level">
+            <label for="intermediate">中級</label>
+            <input type="radio" id="intermediate" value="2" v-model.number="level">
+            <label for="advanced">上級</label>
+            <input type="radio" id="advanced" value="3" v-model.number="level">
+            </p>
+        </form>
+        <br>
+        <p>{{ levelChange }}</p>
         <table id="table">
             <tr v-for="(row, rowIndex) in states">
                 <td v-for="(state, colsIndex) in row" v-on:click="onSelect(rowIndex, colsIndex)">
@@ -44,16 +58,19 @@
         new Vue({
             el: '#app',
             data: {
-                states: [
-                [1, 1, 1],
-                [1, 1, 1],
-                [1, 1, 1],
-                [1, 1, 1]
-                ],
-                message: ''
+                states: [],
+                message: '',
+                level: 1,
+                levelName: ['初級', '中級', '上級']
             },
             created: function() {
                 this.initData()
+            },
+            computed: {
+                levelChange() {
+                    this.initData()
+                    return this.levelName[this.level -1]
+                }
             },
             methods: {
                 onSelect: function(rowIndex, colsIndex) {
@@ -67,13 +84,17 @@
                     this.initData()
                 },
                 initData: function() {
-                    for (var i=0; i < this.states.length; i++) {
-                        for (var j=0; j < this.states[i].length; j++) {
+                    this.states = []
+                    var rowcol = this.level + 2
+                    console.log('rowcol:', rowcol)
+                    for (var i=0; i < rowcol; i++) {
+                        this.states[i] = []
+                        for (var j=0; j < rowcol; j++) {
                             this.states[i][j] = 1
                         }
                     }
-                    row = Math.floor(Math.random() * this.states.length)
-                    col = Math.floor(Math.random() * this.states[0].length)
+                    row = Math.floor(Math.random() * rowcol)
+                    col = Math.floor(Math.random() * rowcol)
                     this.$set(this.states[row], col, 2)
                     this.message = 'アルファベット大文字のオーを選んでください。ゼロじゃないよ。'
                 }
