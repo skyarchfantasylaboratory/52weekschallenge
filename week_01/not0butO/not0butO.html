@@ -1,105 +1,113 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <title>not 0 but O</title>
-    <style>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <title>not 0 but O</title>
+  <style>
+    #table {
+        margin:0 auto;
+        border-collapse: collapse;
+        border: 3px solid #ccc;
+    }
 
-        #table {
-            margin:0 auto;
-            border-collapse: collapse;
-            border: 3px solid #ccc;
-        }
-
-        #table td {
-            border:1px solid #ccc;
-            height: 80px;
-            width: 80px;
-            text-align: center;
-            vertical-align: middle;
-            font-family: 'Roboto', sans-serif;
-            font-size: 75px;
-            cursor: pointer;
-        }
-
-    </style>
+    #table td {
+        border:1px solid #ccc;
+        height: 80px;
+        width: 80px;
+        text-align: center;
+        vertical-align: middle;
+        font-family: 'Roboto', sans-serif;
+        font-size: 75px;
+        cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div id="app">
-        <form>
-            <p>
-            <label for="beginner">初級</label>
-            <input type="radio" id="beginner" value="1" v-model.number="level">
-            <label for="intermediate">中級</label>
-            <input type="radio" id="intermediate" value="2" v-model.number="level">
-            <label for="advanced">上級</label>
-            <input type="radio" id="advanced" value="3" v-model.number="level">
-            </p>
-        </form>
-        <br>
-        <p>{{ levelChange }}</p>
-        <table id="table">
+  <div id="app">
+    <v-app>
+      <v-content>
+        <v-container>
+          <v-img src="images/title.jpg" conatin></v-img>
+          <p></p>
+          <p>アルファベット大文字のオーを選んでください。ゼロじゃないよ。</p>
+          <v-divider></v-divider>
+          <p>レベルを選んでください。</p>
+          <v-radio-group  v-model.number="level" row>
+            <v-radio  v-for="levels in levelList" :label="levels.levelName" :value="levels.levelNum"></v-radio>
+          </v-radio-group>
+          <br>
+          <p>{{ levelChange }}</p>
+          <table id="table">
             <tr v-for="(row, rowIndex) in states">
-                <td v-for="(state, colsIndex) in row" v-on:click="onSelect(rowIndex, colsIndex)">
-                    <div style="color:#000;" v-if="state==1">0</div>
-                    <div style="color:#000;" v-if="state==2">O</div>
-                </td>
+              <td v-for="(state, colsIndex) in row" v-on:click="onSelect(rowIndex, colsIndex)">
+                <div style="color:#000;" v-if="state==1">0</div>
+                <div style="color:#000;" v-if="state==2">O</div>
+              </td>
             </tr>
-        </table>
-        <p>{{ message }}</p>
-        <button v-on:click="shuffle">シャッフルする</button>
-    </div>
+          </table>
+          <br>
+          <p>{{ message }}</p>
+          <v-btn color="primary" v-on:click="shuffle">シャッフルする</v-btn>
+        </v-container>
+      </v-content>
+    </v-app>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script>
-
-        new Vue({
-            el: '#app',
-            data: {
-                states: [],
-                message: '',
-                level: 1,
-                levelName: ['初級', '中級', '上級']
-            },
-            created: function() {
-                this.initData()
-            },
-            computed: {
-                levelChange() {
-                    this.initData()
-                    return this.levelName[this.level -1]
-                }
-            },
-            methods: {
-                onSelect: function(rowIndex, colsIndex) {
-                    if(this.states[rowIndex][colsIndex] == 1) {
-                        this.message = 'はずれ'
-                    } else {
-                        this.message = '正解です'
-                    }
-                },
-                shuffle: function() {
-                    this.initData()
-                },
-                initData: function() {
-                    this.states = []
-                    var rowcol = this.level + 2
-                    console.log('rowcol:', rowcol)
-                    for (var i=0; i < rowcol; i++) {
-                        this.states[i] = []
-                        for (var j=0; j < rowcol; j++) {
-                            this.states[i][j] = 1
-                        }
-                    }
-                    row = Math.floor(Math.random() * rowcol)
-                    col = Math.floor(Math.random() * rowcol)
-                    this.$set(this.states[row], col, 2)
-                    this.message = 'アルファベット大文字のオーを選んでください。ゼロじゃないよ。'
-                }
-            }
-        })
-    </script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: {
+        states: [],
+        message: '',
+        levelList: [{levelNum: 1, levelName: '初級'},
+                    {levelNum: 2, levelName: '中級'},
+                    {levelNum: 3, levelName: '上級'}],
+        level: 1
+      },
+      created: function() {
+        this.initData()
+      },
+      computed: {
+        levelChange() {
+          this.initData()
+          return this.levelList[this.level -1].levelName
+        }
+      },
+      methods: {
+        onSelect: function(rowIndex, colsIndex) {
+          if(this.states[rowIndex][colsIndex] == 1) {
+            this.message = 'はずれ'
+          } else {
+            this.message = '正解です'
+          }
+      },
+      shuffle: function() {
+        this.initData()
+      },
+      initData: function() {
+        this.states = []
+        var rowcol = this.level + 2
+        console.log('rowcol:', rowcol)
+        for (var i=0; i < rowcol; i++) {
+          this.states[i] = []
+          for (var j=0; j < rowcol; j++) {
+            this.states[i][j] = 1
+          }
+        }
+        row = Math.floor(Math.random() * rowcol)
+        col = Math.floor(Math.random() * rowcol)
+        this.$set(this.states[row], col, 2)
+        this.message = 'アルファベット大文字のオーを選んでください。ゼロじゃないよ。'
+      }
+    }
+  })
+  </script>
 </body>
 </html>
