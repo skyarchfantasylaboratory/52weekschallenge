@@ -29,6 +29,18 @@
       .hidden {
         visibility: hidden; 
       }
+
+      .odd {
+        background-image: url(images/odd.png);
+        background-size: 80px 80px;
+        background-position: center center;
+      }
+
+      .even {
+        background-image: url(images/even.png);
+        background-size: 80px 80px;
+        background-position: center center;
+      }
     </style>
   </head>
 
@@ -40,7 +52,7 @@
               <tr v-for="(rows, rowIndex) in cells">
                 <td v-for="(col, colIndex) in rows" 
                     v-on:click="onSelect(rowIndex, colIndex)">
-                  <div v-bind:class="{hidden: col == 0}">{{ col }}</div> 
+                  <div v-bind:class="makeTdClass(rowIndex, colIndex)">{{ col }}</div> 
                 </td>
               </tr>
           </table>
@@ -117,6 +129,13 @@
 
         return check
       },
+      makeTdClass: function(row, col) {
+        return {
+          hidden: this.cells[row][col] == 0,
+          odd: this.cells[row][col] % 2 != 0,
+          even: this.cells[row][col] % 2 == 0
+        }
+      }
     }
   })
   </script>
