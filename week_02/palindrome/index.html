@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>回文怪文</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+
+  <div id="app">
+  <v-app>
+    <v-content>
+      <v-container>
+        <v-row align="start" justify="center">
+          <v-img src="images/logo.png" width="480" max-width="600"></v-img>
+        </v-row>
+      </v-container>
+      <v-container>
+        <v-form>
+          <v-text-field outlined shaped label="回文にしたい文を入力してください" v-model="original" />
+        </v-form>
+        <p>{{ result }}</p>
+      </v-container>
+      <v-container>
+        <div id="tweet-button"></div>
+      </v-container>
+    </v-content>
+    <v-footer absolute>
+      <v-container class="font-weight-medium">
+        <v-row justify="center">Powered by <a href="https://wwww.skyarch.net">SKYARCH NETWORKS</a></v-row>
+        <v-row justify="center">2019 <strong><a href="https://www.skyfantasylab.work">(c)SKYARCH FANTASY LABORATORY</a></strong></v-row>
+      </v-container>
+    </v-footer>
+  </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+  <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+  <script>
+    function setTweetMessage(text) {
+      var removeEl = document.getElementById("tweet-button")
+      if (removeEl.hasChildNodes()) {
+        removeEl.removeChild(removeEl.firstChild)
+      }
+      twttr.widgets.createShareButton(
+        "https:\/\/www.skyfantasylab.work",
+        document.getElementById("tweet-button"),
+        {
+          size: "large",
+          text: text,
+          hashtags: "回文怪文"
+        }
+      );
+    }
+
+    var app = new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: {
+        original: ''
+      },
+      computed: {
+        result: function() {
+          setTweetMessage(this.original)
+          return this.original.split('').reverse().join('')
+        }
+      }
+    });</script>
+</body>
+</html>
