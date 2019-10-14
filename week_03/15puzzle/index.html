@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>15 puzzle</title>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <style>
+      #table {
+        margin:0 auto;
+        border-collapse: collapse;
+        border: 3px solid #ccc;
+      }
+
+      #table td {
+        border:1px solid #ccc;
+        height: 80px;
+        width: 80px;
+        text-align: center;
+        vertical-align: middle;
+        font-family: 'Roboto', sans-serif;
+        font-size: 75px;
+        cursor: pointer;
+      }
+
+      .hidden {
+        visibility: hidden; 
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <v-app>
+        <v-content>
+          <table id="table">
+              <tr v-for="(rows, rowIndex) in cells">
+                <td v-for="(col, colIndex) in rows" 
+                    v-on:click="onSelect(rowIndex, colIndex)">
+                  <div v-bind:class="{hidden: col == 0}">{{ col }}</div> 
+                </td>
+              </tr>
+          </table>
+        </v-content>
+      </v-app>
+    </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+  <script>
+  var app = new Vue({
+    el: '#app',
+    vuetify: new Vuetify(),
+    data: {
+      rowcol: 4,
+      cells: []
+    },
+    created: function(){
+      this.init()
+    },
+    methods: {
+      init: function() {
+        for (var i=0; i<this.rowcol; i++) {
+          this.cells[i] = []
+          for (var j=0; j<this.rowcol; j++) {
+            this.cells[i][j] =  i * this.rowcol + j
+          }
+        }
+
+        for (var k=0; k<this.rowcol*250; k++) {
+          this.onSelect(Math.floor(Math.random()*this.rowcol), Math.floor(Math.random()*this.rowcol))
+        }
+      },
+      onSelect: function(row, col) {
+        var move = true
+
+        if (this.checkOd(this.cells[row][col])) { //odd number
+          if (row > 0 && this.cells[row-1][col] == 0) {
+            this.cells[row-1][col] = this.cells[row][col]
+          } else if (row < this.rowcol-1 && this.cells[row+1][col] == 0) {
+            this.cells[row+1][col] = this.cells[row][col]
+          } else if (col != 0 && this.cells[row][col-1] == 0) {
+            this.cells[row][col-1] = this.cells[row][col]
+          } else if (col != this.rowcol-1 && this.cells[row][col+1] == 0) {
+            this.cells[row][col+1] = this.cells[row][col]
+          } else {
+            move = false
+          }
+        } else { //even number
+          if (row > 0 && col > 0 && this.cells[row-1][col-1] == 0) {
+            this.cells[row-1][col-1] = this.cells[row][col]
+          } else if (row > 0 && col < this.rowcol-1 && this.cells[row-1][col+1] == 0) {
+            this.cells[row-1][col+1] = this.cells[row][col]
+          } else if (row < this.rowcol-1 && col >0 && this.cells[row+1][col-1] == 0) {
+            this.cells[row+1][col-1] = this.cells[row][col]
+          } else if (row < this.rowcol-1 && col < this.rowcol-1 && this.cells[row+1][col+1] == 0) {
+            this.cells[row+1][col+1] = this.cells[row][col]
+          } else {
+            move = false
+          }
+        }
+        if (move) {
+          var tmpArray = this.cells[row]
+          tmpArray.splice(col, 1, 0)
+          this.cells.splice(row, 1, tmpArray)
+        }
+      },
+      checkOd: function(num) {
+        var check = true
+
+        if ((num == 0) || (num %2 == 0)){
+            check = false
+        } 
+
+        return check
+      },
+    }
+  })
+  </script>
+  </body>
+</html>
