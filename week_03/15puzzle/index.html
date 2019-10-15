@@ -31,13 +31,13 @@
       }
 
       .odd {
-        background-image: url(images/odd.png);
+        background-image: url(images/saltire.png);
         background-size: 80px 80px;
         background-position: center center;
       }
 
       .even {
-        background-image: url(images/even.png);
+        background-image: url(images/cross.png);
         background-size: 80px 80px;
         background-position: center center;
       }
@@ -56,6 +56,7 @@
                 </td>
               </tr>
           </table>
+          {{ clear }}
         </v-content>
       </v-app>
     </div>
@@ -68,17 +69,21 @@
     vuetify: new Vuetify(),
     data: {
       rowcol: 4,
-      cells: []
+      emptyNum: 0,
+      cells: [],
+      clear: false
     },
     created: function(){
       this.init()
     },
     methods: {
       init: function() {
+        this.emptyNum = this.rowcol ** 2
+
         for (var i=0; i<this.rowcol; i++) {
           this.cells[i] = []
           for (var j=0; j<this.rowcol; j++) {
-            this.cells[i][j] =  i * this.rowcol + j
+            this.cells[i][j] =  i * this.rowcol + j + 1
           }
         }
 
@@ -89,26 +94,26 @@
       onSelect: function(row, col) {
         var move = true
 
-        if (this.checkOd(this.cells[row][col])) { //odd number
-          if (row > 0 && this.cells[row-1][col] == 0) {
+        if (this.cells[row][col]%2 == 0) { //cross
+          if (row > 0 && this.cells[row-1][col] == this.emptyNum) {
             this.cells[row-1][col] = this.cells[row][col]
-          } else if (row < this.rowcol-1 && this.cells[row+1][col] == 0) {
+          } else if (row < this.rowcol-1 && this.cells[row+1][col] == this.emptyNum) {
             this.cells[row+1][col] = this.cells[row][col]
-          } else if (col != 0 && this.cells[row][col-1] == 0) {
+          } else if (col != 0 && this.cells[row][col-1] == this.emptyNum) {
             this.cells[row][col-1] = this.cells[row][col]
-          } else if (col != this.rowcol-1 && this.cells[row][col+1] == 0) {
+          } else if (col != this.rowcol-1 && this.cells[row][col+1] == this.emptyNum) {
             this.cells[row][col+1] = this.cells[row][col]
           } else {
             move = false
           }
-        } else { //even number
-          if (row > 0 && col > 0 && this.cells[row-1][col-1] == 0) {
+        } else { //saltire
+          if (row > 0 && col > 0 && this.cells[row-1][col-1] == this.emptyNum) {
             this.cells[row-1][col-1] = this.cells[row][col]
-          } else if (row > 0 && col < this.rowcol-1 && this.cells[row-1][col+1] == 0) {
+          } else if (row > 0 && col < this.rowcol-1 && this.cells[row-1][col+1] == this.emptyNum) {
             this.cells[row-1][col+1] = this.cells[row][col]
-          } else if (row < this.rowcol-1 && col >0 && this.cells[row+1][col-1] == 0) {
+          } else if (row < this.rowcol-1 && col >0 && this.cells[row+1][col-1] == this.emptyNum) {
             this.cells[row+1][col-1] = this.cells[row][col]
-          } else if (row < this.rowcol-1 && col < this.rowcol-1 && this.cells[row+1][col+1] == 0) {
+          } else if (row < this.rowcol-1 && col < this.rowcol-1 && this.cells[row+1][col+1] == this.emptyNum) {
             this.cells[row+1][col+1] = this.cells[row][col]
           } else {
             move = false
@@ -116,25 +121,28 @@
         }
         if (move) {
           var tmpArray = this.cells[row]
-          tmpArray.splice(col, 1, 0)
+          tmpArray.splice(col, 1, this.emptyNum)
           this.cells.splice(row, 1, tmpArray)
         }
-      },
-      checkOd: function(num) {
-        var check = true
-
-        if ((num == 0) || (num %2 == 0)){
-            check = false
-        } 
-
-        return check
+        this.checkClear()
       },
       makeTdClass: function(row, col) {
         return {
-          hidden: this.cells[row][col] == 0,
+          hidden: this.cells[row][col] == this.emptyNum,
           odd: this.cells[row][col] % 2 != 0,
           even: this.cells[row][col] % 2 == 0
         }
+      },
+      checkClear: function() {
+        this.clear = false
+        for (var i=0; i<this.rowcol; i++) {
+          for (var j=0; j<this.rowcol; j++) {
+            if (this.cells[i][j] != (i*this.rowcol + j + 1)) {
+              return
+            }
+          }
+        }
+        this.clear = true
       }
     }
   })
