@@ -25,12 +25,12 @@
 
     #table td {
         border:1px solid #ccc;
-        height: 60px;
-        width: 60px;
+        height: 40px;
+        width: 40px;
         text-align: center;
         vertical-align: middle;
         font-family: 'Roboto', sans-serif;
-        font-size: 55px;
+        font-size: 35px;
         cursor: pointer;
     }
   </style>
@@ -43,6 +43,7 @@
           <v-img src="images/title.jpg" conatin></v-img>
           <p></p>
           <p>一つだけ違う文字を選んでください。</p>
+          <p>{{ message }}</p>
           <v-divider></v-divider>
           <p>レベルを選んでください。</p>
           <v-radio-group  v-model.number="level" row>
@@ -50,19 +51,25 @@
           </v-radio-group>
           <br>
           <p>{{ levelChange }}</p>
-          <table id="table">
-            <tr v-for="(row, rowIndex) in states">
-              <td v-for="(state, colsIndex) in row" v-on:click="onSelect(rowIndex, colsIndex)">
-                <div style="color:#000;" v-if="state==1">{{ question[0] }}</div>
-                <div style="color:#000;" v-if="state==2">{{ question[1] }}</div>
-              </td>
-            </tr>
-          </table>
+        </v-container>
+        <v-container>
+          <v-card>
+            <table id="table">
+              <tr v-for="(row, rowIndex) in states">
+                <td v-for="(state, colsIndex) in row" v-on:click="onSelect(rowIndex, colsIndex)">
+                  <div style="color:#000;" v-if="state==1">{{ question[0] }}</div>
+                  <div style="color:#000;" v-if="state==2">{{ question[1] }}</div>
+                </td>
+              </tr>
+            </table>
+            <v-overlay :absolute="true" :value="overlay">
+              <p>ゲームオーバー</p>
+              <v-btn color="primary" v-on:click="overlay=false; shuffleBtn()">もう一回！</v-btn>
+            </v-overlay>
+          </v-card>
           <br>
           <p>残り時間：　{{ countDown }}</p>
-          <p>{{ message }}</p>
           <p>スコア：　{{ score }}</p>
-          <v-btn color="primary" v-on:click="shuffleBtn">シャッフルする</v-btn>
         </v-container>
       </v-content>
       <v-footer dark padless>
@@ -86,13 +93,24 @@
                     {levelNum: 2, levelName: '中級'},
                     {levelNum: 3, levelName: '上級'}],
         level: 1,
-        countTime: 3.0,
+        countTime: 2.0,
         countDown: 0.0,
         gameOver: false,
         timer: null,
         score: 0,
+        overlay: false,
         gameData: [["0", "O"],
+                   ["o", "O"],
+                   ["0", "o"],
                    ["1", "l"],
+                   ["z", "Z"],
+                   ["2", "Z"],
+                   ["2", "z"],
+                   ["6", "b"],
+                   ["s", "S"],
+                   ["w", "W"],
+                   ["x", "X"],
+                   ["z", "Z"],
                    [";", ":"],
                    ["9", "q"],
                    ["q", "g"]],
@@ -103,9 +121,9 @@
       },
       computed: {
         levelChange: function() {
-          console.log("computed")
           clearInterval(this.timer)
           this.shuffle()
+          this.overlay = false
           return this.levelList[this.level -1].levelName
         }
       },
@@ -135,7 +153,7 @@
       },
       initData: function() {
         this.states = []
-        let rowcol = this.level + 2
+        let rowcol = this.level + 4
 
         for (let i=0; i < rowcol; i++) {
           this.states[i] = []
@@ -161,6 +179,7 @@
             clearInterval(this.timer)
             this.message = "ゲームオーバー"
             this.gameOver = true
+            this.overlay = true
           }
         }, 100);
       }
