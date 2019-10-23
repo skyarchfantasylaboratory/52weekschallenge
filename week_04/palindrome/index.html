@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="utf-8">
   <title>回文怪文</title>
@@ -7,6 +7,11 @@
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="twitter:site" content="@SkyFantasyLab" />
+  <meta name="twitter:title" content="回文怪文" />
+  <meta name="twitter:description" content="はじめから読んでも、最後から読んでも同じ音（文）になる回文を作ろう。怪文な回文を作ってTwitterでつぶやこう。" />
+  <meta name="twitter:image" content="http://wc52.skyfantasylab.work/week_04/palindrome/images/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 </head>
 
 <body>
@@ -21,9 +26,11 @@
       </v-container>
       <v-container>
         <v-form>
-          <v-text-field outlined shaped label="回文にしたい文を入力してください" v-model="original" />
+          <v-text-field :rules="[hiragana]" outlined shaped label="回文にしたい文を入力してください" v-model="original" />
         </v-form>
         <p>{{ result }}</p>
+        <v-alert type="success" :value="parindrome">回文です。</v-alert>
+        <v-alert type="error" :value="!parindrome">回文ではありません。</v-alert>
       </v-container>
       <v-container>
         <div id="tweet-button"></div>
@@ -31,8 +38,18 @@
     </v-content>
     <v-footer absolute>
       <v-container class="font-weight-medium">
-        <v-row justify="center">Powered by <a href="https://wwww.skyarch.net">SKYARCH NETWORKS</a></v-row>
-        <v-row justify="center">2019 <strong><a href="https://www.skyfantasylab.work">(c)SKYARCH FANTASY LABORATORY</a></strong></v-row>
+        <v-row align="center">
+          <v-col cols="3">
+            <v-img src="images/SFL-logo-white-512.png" width="128"></v-img>
+          </v-col>
+          <v-col cols="6">
+            <v-row justify="center">Powered by <a href="https://wwww.skyarch.net">SKYARCH NETWORKS</a></v-row>
+            <v-row justify="center">2019 <strong><a href="https://www.skyfantasylab.work">&copy;SKYARCH FANTASY LABORATORY</a></strong></v-row>
+          </v-col>
+          <v-col cols="3">
+              <v-img src="images/skyarch.gif" width="128"></v-img>
+          </v-col>
+        </v-row>
       </v-container>
     </v-footer>
   </v-app>
@@ -49,7 +66,7 @@
         removeEl.removeChild(removeEl.firstChild)
       }
       twttr.widgets.createShareButton(
-        "https:\/\/www.skyfantasylab.work",
+        "http://wc52.skyfantasylab.work/week_04/palindrome/index.html",
         document.getElementById("tweet-button"),
         {
           size: "large",
@@ -63,12 +80,25 @@
       el: '#app',
       vuetify: new Vuetify(),
       data: {
-        original: ''
+        original: '',
+        parindrome: false
       },
       computed: {
         result: function() {
+          this.parindrome = false
+          let reverseText = this.original.split('').reverse().join('')
+
+          if (reverseText == this.original) {
+            this.parindrome = true
+          }
           setTweetMessage(this.original)
-          return this.original.split('').reverse().join('')
+          return reverseText
+        }
+      },
+      methods: {
+        hiragana: function(text) {
+          const pattern = /^[\u3040-\u309f]+$/
+          return pattern.test(text) || "ひらがなで入力をしてください。"
         }
       }
     });</script>
