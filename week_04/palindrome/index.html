@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   <meta name="twitter:site" content="@SkyFantasyLab" />
   <meta name="twitter:title" content="回文怪文" />
-  <meta name="twitter:description" content="はじめから読んでも、最後から読んでも同じ音（文）になる回文を作ろう。怪文な回文を作ってTwitterでつぶやこう。" />
+  <meta name="twitter:description" content="リアルタイムで回文の判定をします。はじめから読んでも、最後から読んでも同じ音（文）になる回文を作ろう。怪文な回文を作ってTwitterでつぶやこう。" />
   <meta name="twitter:image" content="http://wc52.skyfantasylab.work/week_04/palindrome/images/logo.png" />
   <meta name="twitter:card" content="summary_large_image" />
 </head>
@@ -23,10 +23,19 @@
         <v-row align="start" justify="center">
           <v-img src="images/logo.png" width="480" max-width="600"></v-img>
         </v-row>
+        <v-row>
+          <p>リアルタイムで回文の判定をします。はじめから読んでも、最後から読んでも同じ音（文）になる回文を作ろう。</p>
+          <h3>回文のルール</h3>
+          <ul class="body-2">
+            <li>ひらがなで入力をしてください。</li>
+            <li>「ば」、「ぱ」などの濁音、半濁音も区別されます。もとの「は」などの静音への変換は行いません。</li>
+            <li>「っ」の促音、「ゅ」などの拗音も区別されます。もとの「つ」、「ゆ」などの静音への変換は行いません。</li>
+          </ul>
+        </v-row>
       </v-container>
       <v-container>
         <v-form>
-          <v-text-field :rules="[hiragana]" outlined shaped label="回文にしたい文を入力してください" v-model="original" />
+          <v-text-field :rules="[checkCharacter]" outlined shaped label="回文にしたい文を入力してください" v-model="original" />
         </v-form>
         <p>{{ result }}</p>
         <v-alert type="success" :value="parindrome">回文です。</v-alert>
@@ -37,20 +46,18 @@
       </v-container>
     </v-content>
     <v-footer absolute>
-      <v-container class="font-weight-medium">
-        <v-row align="center">
-          <v-col cols="3">
-            <v-img src="images/SFL-logo-white-512.png" width="128"></v-img>
-          </v-col>
-          <v-col cols="6">
-            <v-row justify="center">Powered by <a href="https://wwww.skyarch.net">SKYARCH NETWORKS</a></v-row>
-            <v-row justify="center">2019 <strong><a href="https://www.skyfantasylab.work">&copy;SKYARCH FANTASY LABORATORY</a></strong></v-row>
-          </v-col>
-          <v-col cols="3">
-              <v-img src="images/skyarch.gif" width="128"></v-img>
-          </v-col>
-        </v-row>
-      </v-container>
+      <v-row align="center">
+        <v-col cols="3">
+          <v-img src="images/SFL-logo-white-512.png" width="64"></v-img>
+        </v-col>
+        <v-col cols="6" class="font-weight-medium">
+          <v-row justify="center"><span class="mr-1">Powered by</span><a href="https://wwww.skyarch.net">SKYARCH NETWORKS</a></v-row>
+          <v-row justify="center"><span class="mr-1">2019 &copy;</span><a href="https://www.skyfantasylab.work">SKYARCH FANTASY LABORATORY</a></v-row>
+        </v-col>
+        <v-col cols="3">
+            <v-img src="images/skyarch.gif" width="128"></v-img>
+        </v-col>
+      </v-row>
     </v-footer>
   </v-app>
   </div>
@@ -60,11 +67,14 @@
   <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
   <script>
-    function setTweetMessage(text) {
+    function removeTweetBtn() {
       var removeEl = document.getElementById("tweet-button")
       if (removeEl.hasChildNodes()) {
         removeEl.removeChild(removeEl.firstChild)
       }
+    }
+
+    function setTweetMessage(text) {
       twttr.widgets.createShareButton(
         "http://wc52.skyfantasylab.work/week_04/palindrome/index.html",
         document.getElementById("tweet-button"),
@@ -81,24 +91,34 @@
       vuetify: new Vuetify(),
       data: {
         original: '',
-        parindrome: false
+        parindrome: false,
+        hiragana: false
       },
       computed: {
         result: function() {
           this.parindrome = false
           let reverseText = this.original.split('').reverse().join('')
+          removeTweetBtn()
 
-          if (reverseText == this.original) {
+          if (reverseText == this.original && this.hiragana) {
             this.parindrome = true
+            setTweetMessage(this.original)
           }
-          setTweetMessage(this.original)
           return reverseText
         }
       },
       methods: {
-        hiragana: function(text) {
+        checkCharacter: function(text) {
           const pattern = /^[\u3040-\u309f]+$/
-          return pattern.test(text) || "ひらがなで入力をしてください。"
+          this.hiragana = false
+          let ret = "ひらがなで入力をしてください。"
+
+          if (pattern.test(text)) {
+            this.hiragana = true
+            ret = true
+          }
+
+          return ret
         }
       }
     });</script>
