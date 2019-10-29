@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NASA Open API</title>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <v-content>
+        <v-container>
+          <v-row>
+            <p><a href="https://api.nasa.gov/">NASAのOpen API</a>の利用例</p>
+          </v-row>
+          <v-row>
+            <v-col>
+            <div class="subtitle-1 mb-4">APOD: Astronomy Picture of the Day</div>
+            <div class="mb-2">本日の天文写真(APOD)を表示します。</div>
+            <v-img :src="apod" max-width="400"></v-img>
+          </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+            <div class="subtitle-1 mb-4">Asteroids - NeoWs</div>
+            <div class="mb-2">地球への小惑星の接近状況を表示します。本日から7日間のデータを表示します。</div>
+          </v-col>
+          </v-row>
+        </v-container>
+      </v-content>
+      <v-footer absolute>
+        <v-row align="center">
+          <v-col cols="3">
+            <v-img src="images/SFL-logo-white-512.png" width="64"></v-img>
+          </v-col>
+          <v-col cols="6" class="font-weight-medium">
+            <v-row justify="center"><span class="mr-1">Powered by</span><a href="https://wwww.skyarch.net">SKYARCH NETWORKS</a></v-row>
+            <v-row justify="center"><span class="mr-1">2019 &copy;</span><a href="https://www.skyfantasylab.work">SKYARCH FANTASY LABORATORY</a></v-row>
+          </v-col>
+          <v-col cols="3">
+              <v-img src="images/skyarch.gif" width="128"></v-img>
+          </v-col>
+        </v-row>
+      </v-footer>
+    </v-app>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    vuetify: new Vuetify(),
+    data: {
+      apod: "",
+      neows: ""
+    },
+    mounted () {
+      axios
+      .get('https://api.nasa.gov/planetary/apod?api_key=3QMGKrzJUKyRRaBd9oEpLYEQFxme07BSysHrY1oi')
+      .then(response => (this.apod = response.data.url))
+      .get('https://api.nasa.gov/planetary/apod?api_key=3QMGKrzJUKyRRaBd9oEpLYEQFxme07BSysHrY1oi')
+      .then(response => (this.neows = response.data.url))
+    }
+  })
+</script>
+</body>
+</html>
