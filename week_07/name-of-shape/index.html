@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>図形の呼び方辞典 Light</title>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <v-content>
+        <v-container>
+          <v-app-bar color="deep-purple accent-4" dark class="mb-4">
+            <v-toolbar-title>図形の呼び方辞典 Light</v-toolbar-title>
+          </v-app-bar>
+          <v-row>
+            <v-col v-for="(shape, key) in shapes" :key="key" cols="4">
+              <v-card>
+                <v-card-title>{{ shape.name }}</v-card-title>
+                <v-card-subtitle>{{ shape.yomi }}</v-card-subtitle>
+                <v-img :src="'images/' + shape.image"></v-img>
+              </v-card>
+           </v-col>
+          </v-row>
+        </v-container>
+      </v-content>
+      <v-footer>
+        <v-row align="center">
+          <v-col cols="3">
+            <v-img src="images/SFL-logo-white-512.png" width="64"></v-img>
+          </v-col>
+          <v-col cols="6" class="font-weight-medium">
+            <v-row justify="center"><span class="mr-1">Powered by</span><a href="https://wwww.skyarch.net">SKYARCH NETWORKS</a></v-row>
+            <v-row justify="center"><span class="mr-1">2019 &copy;</span><a href="https://www.skyfantasylab.work">SKYARCH FANTASY LABORATORY</a></v-row>
+          </v-col>
+          <v-col cols="3">
+              <v-img src="images/skyarch.gif" width="128"></v-img>
+          </v-col>
+        </v-row>
+      </v-footer>
+    </v-app>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    vuetify: new Vuetify(),
+    data: {
+      shapes: [{name: "正三角形", yomi: "せいさんかくけい", image: "triangle.png"},
+               {name: "正方形", yomi: "せいほうけい", image: "square.png"},
+               {name: "正五角形", yomi: "せいごかくけい", image: "pentagon.png"},
+               {name: "正六角形", yomi: "せいろくかくけい", image: "hexagon.png"},
+               {name: "正七角形", yomi: "せいななかくけい", image: "heptagon.png"},
+               {name: "正八角形", yomi: "せいはちくけい", image: "octagon.png"},
+               {name: "正九角形", yomi: "せいきゅうかくけい", image: "nonagon.png"},
+               {name: "正十角形", yomi: "せいじゅうかくけい", image: "decagon.png"},
+               {name: "正十一角形", yomi: "せいじゅういちかくけい", image: "hendecagon.png"}
+              ]
+    },
+  })
+</script>
+</body>
+</html>
