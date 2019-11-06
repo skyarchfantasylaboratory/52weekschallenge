@@ -10,7 +10,7 @@
 
     gtag('config', 'UA-148417558-1');
   </script>
-  <title>図形の呼び方辞典 Light</title>
+  <title>図形の名前辞典 Light</title>
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
@@ -23,7 +23,7 @@
   <div id="app">
     <v-app>
       <v-app-bar color="deep-purple accent-4" dark class="mb-4" app>
-        <v-toolbar-title>図形の呼び方辞典 Light</v-toolbar-title>
+        <v-toolbar-title>図形の名前辞典 Light</v-toolbar-title>
         <template v-slot:extension>
           <v-tabs background-color="transparent" v-model="currentTab" show-arrows>
             <v-tab v-for="shape in shapes" :key="shape.id" :href="'#tab-' + shape.id">{{ shape.category }}</v-tab>
